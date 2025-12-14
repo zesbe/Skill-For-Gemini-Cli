@@ -54,15 +54,11 @@ Memuat semua konfigurasi awal.
 gemini-superpowers bootstrap
 ```
 
-## ⚡ Otomatisasi (Agar Gemini Pintar Sendiri)
+## ⚡ Otomatisasi (Sudah Termasuk)
 
-Agar Anda tidak perlu mengetik perintah terus-menerus, mintalah Gemini untuk **mengingat** keberadaan tools ini.
+Script instalasi di atas sekarang secara otomatis menyuntikkan **ingatan** ke dalam Gemini CLI Anda (`~/.gemini/GEMINI.md`).
 
-Ketik perintah ini di chat Gemini Anda:
-
-> "Harap ingat ini: Saya telah menginstal Superpowers di `~/.gemini/superpowers`. Setiap kali saya meminta tugas coding yang kompleks (seperti debugging, fitur baru, atau refactor), kamu WAJIB mengecek skill yang tersedia dengan menjalankan `~/.gemini/superpowers/gemini-cli.js find-skills` dan menggunakan skill yang relevan (seperti TDD atau Brainstorming) sebelum menulis kode."
-
-Setelah Gemini menyimpan ingatan ini, ia akan otomatis "berpikir" menggunakan Superpowers setiap kali Anda memberinya tugas berat.
+Ini berarti setelah instalasi, Gemini akan langsung "sadar" bahwa ia memiliki Superpowers. Setiap kali Anda meminta tugas kompleks, ia akan otomatis mempertimbangkan untuk menggunakan skill yang tersedia tanpa perlu disuruh manual.
 
 ## 📱 Dukungan Platform
 
