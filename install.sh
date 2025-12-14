@@ -103,3 +103,7 @@ fi
 echo -e "${GREEN}=== Instalasi Selesai! ===${NC}"
 echo "Silakan restart terminal Anda atau jalankan: source $SHELL_CONFIG"
 echo "Ketik '$BIN_NAME find-skills' untuk memulai."
+echo ""
+echo -e "${BLUE}💡 AGAR OTOMATIS:${NC}"
+echo "Katakan ini kepada Gemini sekarang:"
+echo -e "${GREEN}\"Ingat bahwa saya telah menginstal Superpowers di ~/.gemini/superpowers. Gunakan skill yang sesuai setiap kali kita mengerjakan tugas coding yang kompleks.\"${NC}"
