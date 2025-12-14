@@ -36,16 +36,16 @@ echo -e "${GREEN}Sistem Terdeteksi: $MACHINE${NC}"
 echo -e "${BLUE}Memeriksa dependencies...${NC}"
 
 install_deps() {
-    if [ "$MACHINE" == "Android (Termux)" ]; then
+    if [ "$MACHINE" = "Android (Termux)" ]; then
         pkg update -y && pkg install git nodejs -y
-    elif [ "$MACHINE" == "Linux" ]; then
-        if command -v apt-get &> /dev/null; then
+    elif [ "$MACHINE" = "Linux" ]; then
+        if command -v apt-get > /dev/null 2>&1; then
             sudo apt-get update && sudo apt-get install -y git nodejs
-        elif command -v yum &> /dev/null; then
+        elif command -v yum > /dev/null 2>&1; then
             sudo yum install -y git nodejs
         fi
-    elif [ "$MACHINE" == "Mac" ]; then
-        if ! command -v brew &> /dev/null; then
+    elif [ "$MACHINE" = "Mac" ]; then
+        if ! command -v brew > /dev/null 2>&1; then
              echo "Homebrew tidak ditemukan. Silakan install git dan nodejs secara manual."
         else
              brew install git node
@@ -53,12 +53,12 @@ install_deps() {
     fi
 }
 
-if ! command -v git &> /dev/null; then
+if ! command -v git > /dev/null 2>&1; then
     echo "Git tidak ditemukan. Mencoba menginstall..."
     install_deps
 fi
 
-if ! command -v node &> /dev/null; then
+if ! command -v node > /dev/null 2>&1; then
     echo "Node.js tidak ditemukan. Mencoba menginstall..."
     install_deps
 fi
