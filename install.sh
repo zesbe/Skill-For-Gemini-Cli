@@ -2,6 +2,7 @@
 # 🎯 Simple & Direct Installer: Gemini CLI + Superpowers + MCP
 # Installs directly to ~/.gemini/ (no subfolders!)
 # DEFAULT YOLO MODE - No confirmations needed!
+# Agents automatically installed to Claude Code!
 # Usage: curl -fsSL https://raw.githubusercontent.com/zesbe/Skill-For-Gemini-Cli/main/install.sh | bash
 
 set -e
@@ -16,7 +17,7 @@ NC='\033[0m'
 
 echo -e "${CYAN}╔════════════════════════════════════════════════════════════╗${NC}"
 echo -e "${CYAN}║${NC}  🎯 Gemini CLI + Superpowers + MCP Installer           ${CYAN}║${NC}"
-echo -e "${CYAN}║${NC}  DEFAULT YOLO MODE - No confirmations!                ${CYAN}║${NC}"
+echo -e "${CYAN}║${NC}  DEFAULT YOLO MODE - Auto agents to Claude Code!       ${CYAN}║${NC}"
 echo -e "${CYAN}╚════════════════════════════════════════════════════════════╝${NC}"
 echo ""
 
@@ -24,6 +25,7 @@ echo ""
 REPO_URL="https://github.com/zesbe/Skill-For-Gemini-Cli.git"
 INSTALL_DIR="$HOME/.gemini"
 NPM_BIN="$HOME/.npm-global/bin"
+AGENTS_DIR="$HOME/.claude/agents"
 
 # Detect OS
 OS="$(uname -s)"
@@ -68,6 +70,17 @@ else
     echo "   ✅ Repository cloned"
 fi
 
+# Install agents to Claude Code (automatic!)
+echo -e "${BLUE}🤖 Installing agents to Claude Code...${NC}"
+mkdir -p "$AGENTS_DIR"
+if [ -d "$INSTALL_DIR/agents" ]; then
+    cp "$INSTALL_DIR/agents"/*.md "$AGENTS_DIR/" 2>/dev/null || true
+    agent_count=$(ls "$AGENTS_DIR"/*.md 2>/dev/null | wc -l)
+    echo "   ✅ $agent_count agents installed to ~/.claude/agents/"
+else
+    echo "   ⚠️  No agents folder found"
+fi
+
 # Create launcher scripts
 echo -e "${BLUE}🚀 Creating launcher scripts (DEFAULT YOLO)...${NC}"
 mkdir -p "$NPM_BIN"
@@ -99,7 +112,7 @@ LAUNCHER
 chmod +x "$NPM_BIN/gemini"
 echo "   ✅ gemini launcher (YOLO default) created"
 
-# Quick launcher (kept for convenience)
+# Quick launcher
 cat > "$NPM_BIN/g" << 'YOLO'
 #!/bin/bash
 export PATH="/data/data/com.termux/files/home/.npm-global/bin:$PATH"
@@ -130,6 +143,7 @@ alias g='gemini'
 alias gs='gemini'
 alias sp-bootstrap='node ~/.gemini/gemini-cli.js bootstrap'
 alias sp-list='node ~/.gemini/gemini-cli.js find-skills'
+alias ca='claude'
 ALIASES
 echo "   ✅ shell-aliases.sh created"
 
@@ -170,13 +184,16 @@ echo "   ~/.gemini/"
 echo "   ├── skills/          # 55 skills"
 echo "   ├── mcp.json         # MCP config"
 echo "   ├── gemini-cli.js    # CLI tool"
-echo "   ├── agents/          # 14 agents"
 echo "   └── shell-aliases.sh # Aliases"
+echo ""
+echo -e "${GREEN}🤖 Agents (Auto-installed):${NC}"
+echo "   ~/.claude/agents/    # $agent_count agents"
 echo ""
 echo -e "${GREEN}🚀 Commands (DEFAULT YOLO MODE):${NC}"
 echo "   gemini              # YOLO mode (FAST!)"
 echo "   gemini --normal     # Normal mode"
 echo "   g                   # Same as gemini"
+echo "   claude              # Claude Code (has agent support)"
 echo ""
 echo -e "${GREEN}🛡️  Superpowers Commands:${NC}"
 echo "   node ~/.gemini/gemini-cli.js bootstrap"
@@ -185,5 +202,6 @@ echo ""
 echo -e "${GREEN}💡 Next Steps:${NC}"
 echo "   1. Restart terminal: source ~/.bashrc"
 echo "   2. Run: gemini 'Your prompt here'"
+echo "   3. Agents available in Claude Code!"
 echo ""
 echo -e "${YELLOW}⚠️  Note: MCP servers work with Claude Code${NC}"
