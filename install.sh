@@ -1,125 +1,185 @@
 #!/bin/bash
+# 🎯 Complete Installer: Gemini CLI + Superpowers + MCP
+# For Termux, Linux, macOS
+# Usage: curl -fsSL https://raw.githubusercontent.com/zesbe/Skill-For-Gemini-Cli/main/install.sh | bash
 
 set -e
 
-REPO_URL="https://github.com/zesbe/Skill-For-Gemini-Cli.git"
-INSTALL_DIR="$HOME/.gemini/superpowers"
-BIN_NAME="gemini-superpowers"
-
-# Warna untuk output
-GREEN='\033[0;32m'
-BLUE='\033[0;34m'
+# Colors
 RED='\033[0;31m'
-NC='\033[0m' # No Color
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+CYAN='\033[0;36m'
+NC='\033[0m'
 
-echo -e "${BLUE}=== Installer Skill Superpowers untuk Gemini CLI ===${NC}"
+echo -e "${CYAN}╔════════════════════════════════════════════════════════════╗${NC}"
+echo -e "${CYAN}║${NC}  🎯 Gemini CLI + Superpowers + MCP Installer           ${CYAN}║${NC}"
+echo -e "${CYAN}╚════════════════════════════════════════════════════════════╝${NC}"
+echo ""
 
-# 1. Deteksi OS
+# Configuration
+REPO_URL="https://github.com/zesbe/Skill-For-Gemini-Cli.git"
+SUPERPOWERS_DIR="$HOME/.gemini/superpowers"
+INSTALL_DIR="$HOME/.gemini"
+NPM_BIN="$HOME/.npm-global/bin"
+
+# Detect OS
 OS="$(uname -s)"
 case "${OS}" in
-    Linux*)     
+    Linux*)
         if [ -d "/data/data/com.termux" ]; then
-            MACHINE="Android (Termux)"
+            MACHINE="Termux (Android)"
         else
             MACHINE="Linux"
         fi
         ;;
-    Darwin*)    MACHINE="Mac";;
-    CYGWIN*)    MACHINE="Cygwin";;
-    MINGW*)     MACHINE="MinGw";;
+    Darwin*)    MACHINE="macOS";;
+    CYGWIN*|MINGW*)    MACHINE="Windows";;
     *)          MACHINE="UNKNOWN:${OS}"
 esac
 
-echo -e "${GREEN}Sistem Terdeteksi: $MACHINE${NC}"
+echo -e "${GREEN}Platform: $MACHINE${NC}"
 
-# 2. Cek Dependencies (Git & Node.js)
-echo -e "${BLUE}Memeriksa dependencies...${NC}"
-
-install_deps() {
-    if [ "$MACHINE" = "Android (Termux)" ]; then
-        pkg update -y && pkg install git nodejs -y
-    elif [ "$MACHINE" = "Linux" ]; then
-        if command -v apt-get > /dev/null 2>&1; then
-            sudo apt-get update && sudo apt-get install -y git nodejs
-        elif command -v yum > /dev/null 2>&1; then
-            sudo yum install -y git nodejs
-        fi
-    elif [ "$MACHINE" = "Mac" ]; then
-        if ! command -v brew > /dev/null 2>&1; then
-             echo "Homebrew tidak ditemukan. Silakan install git dan nodejs secara manual."
-        else
-             brew install git node
-        fi
-    fi
-}
+# Check dependencies
+echo -e "${BLUE}📦 Checking dependencies...${NC}"
 
 if ! command -v git > /dev/null 2>&1; then
-    echo "Git tidak ditemukan. Mencoba menginstall..."
-    install_deps
+    echo -e "${YELLOW}Git not found. Please install git first.${NC}"
+    exit 1
 fi
 
 if ! command -v node > /dev/null 2>&1; then
-    echo "Node.js tidak ditemukan. Mencoba menginstall..."
-    install_deps
+    echo -e "${YELLOW}Node.js not found. Please install Node.js first.${NC}"
+    exit 1
 fi
 
-# 3. Clone / Update Repository
-if [ -d "$INSTALL_DIR" ]; then
-    echo -e "${BLUE}Direktori sudah ada, melakukan update...${NC}"
-    cd "$INSTALL_DIR"
-    git pull
+echo "   ✅ Git and Node.js found"
+
+# Clone or update repository
+echo -e "${BLUE}📥 Setting up Superpowers...${NC}"
+if [ -d "$SUPERPOWERS_DIR" ]; then
+    echo "   Updating existing installation..."
+    cd "$SUPERPOWERS_DIR"
+    git pull origin main 2>/dev/null || echo "   ⚠️  Could not update, using existing"
 else
-    echo -e "${BLUE}Cloning repository ke $INSTALL_DIR...${NC}"
-    git clone "$REPO_URL" "$INSTALL_DIR"
+    git clone "$REPO_URL" "$SUPERPOWERS_DIR"
+    echo "   ✅ Repository cloned"
 fi
 
-# 4. Setup Permissions
-echo -e "${BLUE}Mengatur permissions...${NC}"
-chmod +x "$INSTALL_DIR/gemini-cli.js"
-
-# 5. Setup Alias
-echo -e "${BLUE}Mengonfigurasi alias...${NC}"
-SHELL_CONFIG=""
-if [ -f "$HOME/.bashrc" ]; then
-    SHELL_CONFIG="$HOME/.bashrc"
-elif [ -f "$HOME/.zshrc" ]; then
-    SHELL_CONFIG="$HOME/.zshrc"
-fi
-
-if [ -n "$SHELL_CONFIG" ]; then
-    if ! grep -q "gemini-superpowers" "$SHELL_CONFIG"; then
-        echo "" >> "$SHELL_CONFIG"
-        echo "# Gemini Superpowers Alias" >> "$SHELL_CONFIG"
-        echo "alias $BIN_NAME='$INSTALL_DIR/gemini-cli.js'" >> "$SHELL_CONFIG"
-        echo -e "${GREEN}Alias '$BIN_NAME' ditambahkan ke $SHELL_CONFIG${NC}"
-    else
-        echo "Alias sudah ada di $SHELL_CONFIG"
-    fi
+# Setup MCP config
+echo -e "${BLUE}🔌 Setting up MCP configuration...${NC}"
+mkdir -p "$INSTALL_DIR"
+if [ -f "$SUPERPOWERS_DIR/mcp.json" ]; then
+    cp "$SUPERPOWERS_DIR/mcp.json" "$INSTALL_DIR/mcp.json"
+    echo "   ✅ MCP config installed"
 else
-    echo -e "${RED}Tidak dapat menemukan file konfigurasi shell (.bashrc/.zshrc).${NC}"
-    echo "Silakan tambahkan manual: alias $BIN_NAME='$INSTALL_DIR/gemini-cli.js'"
+    echo "   ⚠️  MCP config not found in repo"
 fi
 
-# 6. Setup Memory (Otomatisasi)
-echo -e "${BLUE}Menyuntikkan Memori Gemini...${NC}"
-GEMINI_MEMORY_FILE="$HOME/.gemini/GEMINI.md"
-MEMORY_TEXT="- I have 'Superpowers' installed at $INSTALL_DIR. Before starting complex software engineering tasks (designing, refactoring, debugging), I must run \`$INSTALL_DIR/gemini-cli.js bootstrap\` or \`find-skills\` to check for relevant workflows like brainstorming, TDD, or systematic debugging, and use them if applicable."
+# Create launcher scripts
+echo -e "${BLUE}🚀 Creating launcher scripts...${NC}"
+mkdir -p "$NPM_BIN"
 
-# Pastikan direktori .gemini ada
+# Gemini launcher
+cat > "$NPM_BIN/gemini" << 'LAUNCHER'
+#!/bin/bash
+# 🎯 Gemini CLI Launcher with Superpowers + YOLO Mode
+
+export NODE_PATH="/data/data/com.termux/files/usr/lib/node_modules"
+export TMPDIR="$HOME/.tmp/gemini-temp"
+mkdir -p "$TMPDIR" 2>/dev/null || true
+
+cd /data/data/com.termux/files/usr/lib/node_modules/@google/gemini-cli
+exec node dist/index.js "$@"
+LAUNCHER
+chmod +x "$NPM_BIN/gemini"
+echo "   ✅ gemini launcher created"
+
+# Quick YOLO launcher
+cat > "$NPM_BIN/g" << 'YOLO'
+#!/bin/bash
+export PATH="/data/data/com.termux/files/home/.npm-global/bin:$PATH"
+exec gemini --yolo "$@"
+YOLO
+chmod +x "$NPM_BIN/g"
+echo "   ✅ g (YOLO) launcher created"
+
+# Standalone launcher
+cat > "$HOME/launch-gemini.sh" << 'SCRIPT'
+#!/bin/bash
+# 🚀 Quick Gemini CLI Launcher
+if [ "$1" = "--yolo" ] || [ "$1" = "-y" ]; then
+    export PATH="/data/data/com.termux/files/home/.npm-global/bin:$PATH"
+    exec gemini --yolo
+else
+    export PATH="/data/data/com.termux/files/home/.npm-global/bin:$PATH"
+    exec gemini
+fi
+SCRIPT
+chmod +x "$HOME/launch-gemini.sh"
+echo "   ✅ launch-gemini.sh created"
+
+# Create shell aliases
+cat > "$INSTALL_DIR/shell-aliases.sh" << 'ALIASES'
+# 🚀 Quick aliases untuk Gemini CLI
+alias g='gemini --yolo --no-superpowers'
+alias gs='gemini --yolo'
+alias sp-bootstrap='node ~/.gemini/superpowers/gemini-cli.js bootstrap'
+alias sp-list='node ~/.gemini/superpowers/gemini-cli.js find-skills'
+ALIASES
+echo "   ✅ shell-aliases.sh created"
+
+# Add to PATH
+echo -e "${BLUE}🔧 Updating PATH...${NC}"
+if ! grep -q "$NPM_BIN" "$HOME/.bashrc" 2>/dev/null; then
+    echo "" >> "$HOME/.bashrc"
+    echo "# Gemini CLI + Superpowers" >> "$HOME/.bashrc"
+    echo "export PATH=\"$NPM_BIN:\$PATH\"" >> "$HOME/.bashrc"
+    echo "   ✅ PATH updated in .bashrc"
+fi
+
+# Setup Gemini memory
+echo -e "${BLUE}🧠 Setting up Gemini memory...${NC}"
+GEMINI_MEMORY="$HOME/.gemini/GEMINI.md"
 mkdir -p "$HOME/.gemini"
 
-if [ ! -f "$GEMINI_MEMORY_FILE" ]; then
-    echo "## Gemini Added Memories" > "$GEMINI_MEMORY_FILE"
+if [ ! -f "$GEMINI_MEMORY" ]; then
+    echo "## Gemini Added Memories" > "$GEMINI_MEMORY"
 fi
 
-if ! grep -q "Superpowers" "$GEMINI_MEMORY_FILE"; then
-    echo "$MEMORY_TEXT" >> "$GEMINI_MEMORY_FILE"
-    echo -e "${GREEN}Memori otomatis berhasil ditambahkan!${NC}"
+if ! grep -q "Superpowers" "$GEMINI_MEMORY" 2>/dev/null; then
+    echo "" >> "$GEMINI_MEMORY"
+    echo "- I have 'Superpowers' installed at $SUPERPOWERS_DIR. Before starting complex software engineering tasks, I must run \`$SUPERPOWERS_DIR/gemini-cli.js bootstrap\` or \`find-skills\` to check for relevant workflows." >> "$GEMINI_MEMORY"
+    echo "   ✅ Memory injected"
 else
-    echo "Memori sudah ada."
+    echo "   ⚠️  Memory already exists"
 fi
 
-echo -e "${GREEN}=== Instalasi Selesai! ===${NC}"
-echo "Silakan restart terminal Anda atau jalankan: source $SHELL_CONFIG"
-echo "Ketik '$BIN_NAME find-skills' untuk memulai."
-echo "Gemini sekarang sudah otomatis mengetahui keberadaan skill ini."
+# Completion
+echo ""
+echo -e "${GREEN}╔════════════════════════════════════════════════════════════╗${NC}"
+echo -e "${GREEN}║${NC}  ✅ Installation Complete!                              ${GREEN}║${NC}"
+echo -e "${GREEN}╚════════════════════════════════════════════════════════════╝${NC}"
+echo ""
+echo -e "${GREEN}📋 What's Installed:${NC}"
+echo "   ✅ Superpowers (30+ skills)"
+echo "   ✅ MCP configuration"
+echo "   ✅ Gemini CLI launcher (gemini)"
+echo "   ✅ Quick launcher (g)"
+echo ""
+echo -e "${GREEN}🚀 Quick Commands:${NC}"
+echo "   g                    # YOLO mode (fast)"
+echo "   gemini               # Normal mode"
+echo "   bash ~/launch-gemini.sh --yolo  # Quick script"
+echo ""
+echo -e "${GREEN}🛡️  Superpowers Commands:${NC}"
+echo "   node ~/.gemini/superpowers/gemini-cli.js bootstrap"
+echo "   node ~/.gemini/superpowers/gemini-cli.js find-skills"
+echo ""
+echo -e "${GREEN}💡 Next Steps:${NC}"
+echo "   1. Restart terminal or: source ~/.bashrc"
+echo "   2. Run: g 'Your prompt here'"
+echo "   3. Check: ~/.gemini/README.md"
+echo ""
+echo -e "${YELLOW}⚠️  Note: MCP servers work with Claude Code, not Gemini CLI${NC}"

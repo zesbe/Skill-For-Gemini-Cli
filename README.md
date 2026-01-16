@@ -1,82 +1,140 @@
-# Skill Superpowers untuk Gemini CLI
+# 🎯 Gemini CLI + Superpowers + MCP
 
-Proyek ini menghadirkan kemampuan **Superpowers** (workflow pengembangan software tingkat lanjut) ke dalam lingkungan Gemini CLI. Ini kompatibel dengan **Android (Termux), macOS, Linux, dan Windows**.
+Proyek ini menghadirkan **Superpowers** (30+ workflow skills) + **MCP servers configuration** ke Gemini CLI untuk pengembangan software tingkat lanjut.
 
-## 🚀 Instalasi Otomatis (Auto-Detect)
-
-Salin dan jalankan perintah berikut di terminal Anda. Script ini akan otomatis mendeteksi sistem operasi Anda dan melakukan instalasi.
-
-### Android (Termux), macOS, & Linux
+## 🚀 Instalasi Cepat (Termux & Linux)
 
 ```bash
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/zesbe/Skill-For-Gemini-Cli/main/install.sh)"
+# One-line installer
+curl -fsSL https://raw.githubusercontent.com/zesbe/Skill-For-Gemini-Cli/main/install.sh | bash
 ```
 
-### Windows
+## 📦 Yang Included
 
-1. Pastikan Anda telah menginstal **Git** dan **Node.js**.
-2. Buka **PowerShell** sebagai Administrator.
-3. Clone repository ini:
-   ```powershell
-   git clone https://github.com/zesbe/Skill-For-Gemini-Cli.git $HOME\.gemini\superpowers
-   ```
-4. Buat alias (opsional, tambahkan ke `$PROFILE`):
-   ```powershell
-   Set-Alias gemini-superpowers "$HOME\.gemini\superpowers\gemini-cli.js"
-   ```
+| Fitur | Status | Deskripsi |
+|-------|--------|-----------|
+| **Superpowers** | ✅ | 30+ development workflow skills |
+| **MCP Config** | ✅ | 6 MCP servers (Context7, Exa, Memory, etc.) |
+| **YOLO Mode** | ✅ | Skip semua konfirmasi - cepat! |
+| **Quick Launcher** | ✅ | Command `g` untuk akses cepat |
 
-## 🛠️ Fitur & Penggunaan
-
-Setelah terinstal, Anda dapat mengakses tool ini menggunakan perintah `gemini-superpowers`.
-
-### 1. Menampilkan Semua Skill
-Melihat daftar kemampuan yang tersedia untuk Gemini Anda.
+## 🚀 Quick Start
 
 ```bash
-gemini-superpowers find-skills
+# YOLO Mode (RECOMMENDED - tanpa konfirmasi)
+g "Buatin API endpoint untuk user CRUD"
+
+# Normal Mode
+gemini
+
+# Dengan Superpowers
+gs
+
+# Superpowers bootstrap
+node ~/.gemini/superpowers/gemini-cli.js bootstrap
+node ~/.gemini/superpowers/gemini-cli.js find-skills
 ```
 
-### 2. Menggunakan Skill Tertentu
-Memuat instruksi skill tertentu agar Gemini dapat menggunakannya.
+## 🎯 Available Commands
 
-```bash
-gemini-superpowers use-skill superpowers:brainstorming
-```
-Contoh skill populer:
-- `superpowers:brainstorming` - Untuk merancang fitur sebelum coding.
-- `superpowers:test-driven-development` - Workflow TDD (Red-Green-Refactor).
-- `superpowers:systematic-debugging` - Panduan debugging sistematis.
+| Command | Description |
+|---------|-------------|
+| `g` | Quick YOLO launch |
+| `gemini` | Normal launcher |
+| `gs` | Gemini + Superpowers |
+| `launch-gemini.sh --yolo` | Standalone script |
 
-### 3. Bootstrap (Inisialisasi)
-Memuat semua konfigurasi awal.
+## 🛡️ Available Skills (30+)
 
-```bash
-gemini-superpowers bootstrap
-```
+### Planning & Design
+- `superpowers:brainstorming` - Design refinement
+- `superpowers:writing-plans` - Create implementation plans
+- `superpowers:executing-plans` - Execute plans in batches
 
-## ⚡ Otomatisasi (Sudah Termasuk)
+### Development
+- `superpowers:test-driven-development` - TDD workflow
+- `superpowers:subagent-driven-development` - Agent-based dev
+- `superpowers:refactoring` - Code refactoring
+- `superpowers:api-development` - API development
+- `superpowers:database-development` - Database design
 
-Script instalasi di atas sekarang secara otomatis menyuntikkan **ingatan** ke dalam Gemini CLI Anda (`~/.gemini/GEMINI.md`).
+### Code Quality
+- `superpowers:requesting-code-review` - Code review
+- `superpowers:security-review` - Security audit
+- `superpowers:ui-ux-review` - UI/UX evaluation
 
-Ini berarti setelah instalasi, Gemini akan langsung "sadar" bahwa ia memiliki Superpowers. Setiap kali Anda meminta tugas kompleks, ia akan otomatis mempertimbangkan untuk menggunakan skill yang tersedia tanpa perlu disuruh manual.
+### Debugging
+- `superpowers:systematic-debugging` - Systematic debugging
+- `superpowers:root-cause-tracing` - Root cause analysis
+- `superpowers:integration-testing` - Integration tests
+
+### Deployment
+- `superpowers:deployment` - Deployment workflow
+- `superpowers:using-git-worktrees` - Git worktrees
+- `superpowers:finishing-a-development-branch` - Branch completion
+
+## 🔌 MCP Servers (for Claude Code)
+
+MCP configuration included in `~/.gemini/mcp.json`:
+
+- **context7** - Documentation lookup
+- **exa** - Web search
+- **memory** - Persistent memory
+- **sequential-thinking** - Complex reasoning
+- **filesystem** - File operations
+- **fetch** - HTTP requests
+
+> ⚠️ **Note:** MCP servers work with Claude Code, not Gemini CLI directly.
 
 ## 📱 Dukungan Platform
 
-| Platform | Status | Catatan |
-|----------|--------|---------|
-| **Android** | ✅ Stabil | Gunakan Termux. Script install otomatis akan menginstal Node.js & Git. |
-| **Linux** | ✅ Stabil | Diuji pada Ubuntu/Debian. Mendukung apt/yum. |
-| **macOS** | ✅ Stabil | Membutuhkan Homebrew untuk instalasi dependencies otomatis. |
-| **Windows** | ⚠️ Manual | Jalankan via PowerShell atau Git Bash. |
+| Platform | Status |
+|----------|--------|
+| **Termux (Android)** | ✅ Stabil |
+| **Linux** | ✅ Stabil |
+| **macOS** | ✅ Stabil |
+| **Windows** | ⚠️ Manual setup |
 
-## 📂 Struktur Direktori
+## 📁 Lokasi Instalasi
 
-Tool ini akan diinstal ke folder:
-`~/.gemini/superpowers`
+```
+~/.gemini/
+├── superpowers/    # 30+ skills + agents
+├── skills/         # Personal skills
+├── mcp.json        # MCP configuration
+├── shell-aliases.sh
+└── README.md
+```
+
+## 🔧 Manual Installation
+
+```bash
+# Clone repository
+git clone https://github.com/zesbe/Skill-For-Gemini-Cli.git ~/.gemini/superpowers
+
+# Create launcher
+cat > ~/.npm-global/bin/gemini << 'EOF'
+#!/bin/bash
+export NODE_PATH="/data/data/com.termux/files/usr/lib/node_modules"
+cd /data/data/com.termux/files/usr/lib/node_modules/@google/gemini-cli
+exec node dist/index.js "$@"
+EOF
+chmod +x ~/.npm-global/bin/gemini
+
+# Add to PATH
+export PATH="$HOME/.npm-global/bin:$PATH"
+```
+
+## 📚 Dokumentasi
+
+- [Superpowers Original](https://github.com/obra/superpowers)
+- [Claude Code](https://claude.com/cli)
+- [Gemini CLI](https://github.com/google-gemini/gemini-cli)
 
 ## 🤝 Kontribusi
 
-Silakan fork repository ini dan kirim Pull Request jika Anda ingin menambahkan skill baru atau memperbaiki bug.
+Fork dan PR untuk menambahkan skill baru atau improve installer.
 
 ---
-**Credits:** Based on the original [Superpowers](https://github.com/obra/superpowers) by obra, adapted for Gemini CLI.
+
+**Credits:** Based on [Superpowers](https://github.com/obra/superpowers) by obra
