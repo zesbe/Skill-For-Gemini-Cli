@@ -1,6 +1,6 @@
 #!/bin/bash
-# 🎯 Complete Installer: Gemini CLI + Superpowers + MCP
-# For Termux, Linux, macOS
+# 🎯 Simple & Direct Installer: Gemini CLI + Superpowers + MCP
+# Installs directly to ~/.gemini/ (no subfolders!)
 # Usage: curl -fsSL https://raw.githubusercontent.com/zesbe/Skill-For-Gemini-Cli/main/install.sh | bash
 
 set -e
@@ -20,7 +20,6 @@ echo ""
 
 # Configuration
 REPO_URL="https://github.com/zesbe/Skill-For-Gemini-Cli.git"
-SUPERPOWERS_DIR="$HOME/.gemini/superpowers"
 INSTALL_DIR="$HOME/.gemini"
 NPM_BIN="$HOME/.npm-global/bin"
 
@@ -56,25 +55,15 @@ fi
 
 echo "   ✅ Git and Node.js found"
 
-# Clone or update repository
-echo -e "${BLUE}📥 Setting up Superpowers...${NC}"
-if [ -d "$SUPERPOWERS_DIR" ]; then
+# Clone or update repository directly to ~/.gemini/
+echo -e "${BLUE}📥 Cloning repository to ~/.gemini/...${NC}"
+if [ -d "$INSTALL_DIR" ]; then
     echo "   Updating existing installation..."
-    cd "$SUPERPOWERS_DIR"
+    cd "$INSTALL_DIR"
     git pull origin main 2>/dev/null || echo "   ⚠️  Could not update, using existing"
 else
-    git clone "$REPO_URL" "$SUPERPOWERS_DIR"
+    git clone "$REPO_URL" "$INSTALL_DIR"
     echo "   ✅ Repository cloned"
-fi
-
-# Setup MCP config
-echo -e "${BLUE}🔌 Setting up MCP configuration...${NC}"
-mkdir -p "$INSTALL_DIR"
-if [ -f "$SUPERPOWERS_DIR/mcp.json" ]; then
-    cp "$SUPERPOWERS_DIR/mcp.json" "$INSTALL_DIR/mcp.json"
-    echo "   ✅ MCP config installed"
-else
-    echo "   ⚠️  MCP config not found in repo"
 fi
 
 # Create launcher scripts
@@ -84,7 +73,7 @@ mkdir -p "$NPM_BIN"
 # Gemini launcher
 cat > "$NPM_BIN/gemini" << 'LAUNCHER'
 #!/bin/bash
-# 🎯 Gemini CLI Launcher with Superpowers + YOLO Mode
+# 🎯 Gemini CLI Launcher
 
 export NODE_PATH="/data/data/com.termux/files/usr/lib/node_modules"
 export TMPDIR="$HOME/.tmp/gemini-temp"
@@ -125,8 +114,8 @@ cat > "$INSTALL_DIR/shell-aliases.sh" << 'ALIASES'
 # 🚀 Quick aliases untuk Gemini CLI
 alias g='gemini --yolo --no-superpowers'
 alias gs='gemini --yolo'
-alias sp-bootstrap='node ~/.gemini/superpowers/gemini-cli.js bootstrap'
-alias sp-list='node ~/.gemini/superpowers/gemini-cli.js find-skills'
+alias sp-bootstrap='node ~/.gemini/gemini-cli.js bootstrap'
+alias sp-list='node ~/.gemini/gemini-cli.js find-skills'
 ALIASES
 echo "   ✅ shell-aliases.sh created"
 
@@ -141,8 +130,8 @@ fi
 
 # Setup Gemini memory
 echo -e "${BLUE}🧠 Setting up Gemini memory...${NC}"
-GEMINI_MEMORY="$HOME/.gemini/GEMINI.md"
-mkdir -p "$HOME/.gemini"
+GEMINI_MEMORY="$INSTALL_DIR/GEMINI.md"
+mkdir -p "$INSTALL_DIR"
 
 if [ ! -f "$GEMINI_MEMORY" ]; then
     echo "## Gemini Added Memories" > "$GEMINI_MEMORY"
@@ -150,7 +139,7 @@ fi
 
 if ! grep -q "Superpowers" "$GEMINI_MEMORY" 2>/dev/null; then
     echo "" >> "$GEMINI_MEMORY"
-    echo "- I have 'Superpowers' installed at $SUPERPOWERS_DIR. Before starting complex software engineering tasks, I must run \`$SUPERPOWERS_DIR/gemini-cli.js bootstrap\` or \`find-skills\` to check for relevant workflows." >> "$GEMINI_MEMORY"
+    echo "- I have 'Superpowers' installed at $INSTALL_DIR. Before starting complex software engineering tasks, I must run \`$INSTALL_DIR/gemini-cli.js bootstrap\` or \`find-skills\` to check for relevant workflows." >> "$GEMINI_MEMORY"
     echo "   ✅ Memory injected"
 else
     echo "   ⚠️  Memory already exists"
@@ -162,24 +151,25 @@ echo -e "${GREEN}╔════════════════════
 echo -e "${GREEN}║${NC}  ✅ Installation Complete!                              ${GREEN}║${NC}"
 echo -e "${GREEN}╚════════════════════════════════════════════════════════════╝${NC}"
 echo ""
-echo -e "${GREEN}📋 What's Installed:${NC}"
-echo "   ✅ Superpowers (30+ skills)"
-echo "   ✅ MCP configuration"
-echo "   ✅ Gemini CLI launcher (gemini)"
-echo "   ✅ Quick launcher (g)"
+echo -e "${GREEN}📋 Structure:${NC}"
+echo "   ~/.gemini/"
+echo "   ├── skills/          # 30+ skills"
+echo "   ├── mcp.json         # MCP config"
+echo "   ├── gemini-cli.js    # CLI tool"
+echo "   ├── agents/          # 14 agents"
+echo "   ├── hooks/           # Hooks"
+echo "   └── shell-aliases.sh # Aliases"
 echo ""
 echo -e "${GREEN}🚀 Quick Commands:${NC}"
 echo "   g                    # YOLO mode (fast)"
 echo "   gemini               # Normal mode"
-echo "   bash ~/launch-gemini.sh --yolo  # Quick script"
 echo ""
 echo -e "${GREEN}🛡️  Superpowers Commands:${NC}"
-echo "   node ~/.gemini/superpowers/gemini-cli.js bootstrap"
-echo "   node ~/.gemini/superpowers/gemini-cli.js find-skills"
+echo "   node ~/.gemini/gemini-cli.js bootstrap"
+echo "   node ~/.gemini/gemini-cli.js find-skills"
 echo ""
 echo -e "${GREEN}💡 Next Steps:${NC}"
-echo "   1. Restart terminal or: source ~/.bashrc"
+echo "   1. Restart terminal: source ~/.bashrc"
 echo "   2. Run: g 'Your prompt here'"
-echo "   3. Check: ~/.gemini/README.md"
 echo ""
-echo -e "${YELLOW}⚠️  Note: MCP servers work with Claude Code, not Gemini CLI${NC}"
+echo -e "${YELLOW}⚠️  Note: MCP servers work with Claude Code${NC}"

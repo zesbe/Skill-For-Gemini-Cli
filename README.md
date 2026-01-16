@@ -31,8 +31,8 @@ gemini
 gs
 
 # Superpowers bootstrap
-node ~/.gemini/superpowers/gemini-cli.js bootstrap
-node ~/.gemini/superpowers/gemini-cli.js find-skills
+node ~/.gemini/gemini-cli.js bootstrap
+node ~/.gemini/gemini-cli.js find-skills
 ```
 
 ## 🎯 Available Commands
@@ -97,20 +97,23 @@ MCP configuration included in `~/.gemini/mcp.json`:
 
 ## 📁 Lokasi Instalasi
 
+Installs directly to `~/.gemini/`:
+
 ```
 ~/.gemini/
-├── superpowers/    # 30+ skills + agents
-├── skills/         # Personal skills
-├── mcp.json        # MCP configuration
-├── shell-aliases.sh
-└── README.md
+├── skills/          # 30+ skills
+├── mcp.json         # MCP configuration
+├── gemini-cli.js    # CLI tool
+├── agents/          # 14 agents
+├── hooks/           # Hooks
+└── shell-aliases.sh # Aliases
 ```
 
 ## 🔧 Manual Installation
 
 ```bash
-# Clone repository
-git clone https://github.com/zesbe/Skill-For-Gemini-Cli.git ~/.gemini/superpowers
+# Clone repository directly to ~/.gemini/
+git clone https://github.com/zesbe/Skill-For-Gemini-Cli.git ~/.gemini
 
 # Create launcher
 cat > ~/.npm-global/bin/gemini << 'EOF'
